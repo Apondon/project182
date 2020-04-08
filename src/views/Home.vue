@@ -24,7 +24,7 @@
                 <el-col :span='18'>
                   <span class="cards_tit">{{o.title}}</span>
                   <p class="cards_text">{{o.text}}</p>
-                  <el-button type="primary" size='mini' class="buyBtn">立即购买</el-button>
+                  <el-button type="primary" size='mini' class="buyBtn" @click='clickhandle(o.id)'>立即购买</el-button>
                 </el-col>
               </el-row>
             </el-card>
@@ -32,7 +32,6 @@
         </el-row>
       </el-col>
     </el-row>
-    <MainPage />
   </div>
 </template>
 
@@ -143,6 +142,17 @@ export default {
         },
       ]
     }
+    
+  },
+  methods:{
+      clickhandle(id){
+        this.$router.push({
+                name:'Detail',
+                params:{
+                    id:id,
+                }
+            })
+      }
   }
   
 }
