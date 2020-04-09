@@ -33,7 +33,7 @@
                         </el-form-item>
                         <el-form-item label="总价">{{price}}</el-form-item>
                     </el-form>
-                    <el-button type="primary">立即购买</el-button>
+                    <el-button type="primary" @click="clickHandle">立即购买</el-button>
                 </div>
                 <!-- 下 -->
                 <div class="down">
@@ -42,6 +42,23 @@
                 </div>
             </el-col>
         </el-row>
+        <el-dialog :visible.sync="dialogTableVisible">
+            <el-table :data="gridData" border>
+                <el-table-column property="book" label="书籍名称" width="220"></el-table-column>
+                <el-table-column property="num" label="购买数量" width="100"></el-table-column>
+                <el-table-column property="school" label="适用校区" width="220"></el-table-column>
+                <el-table-column property="price" label="单价"></el-table-column>
+                <!-- 计算总价一 -->
+                <el-table-column property="finalPrice" label="总价一"></el-table-column>
+                <!-- 计算总价二 -->
+                <el-table-column label="总价">
+                    <template slot-scope="scope">
+                        <span style="color:red">{{scope.row.num * scope.row.price}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-button type="primary">立即购买</el-button>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -59,7 +76,7 @@ export default {
                 book:'',//选择购买的书名
                 num:1,//购买数量
                 school:'',//适用校区
-                price:0,
+                price:0, //书籍单价
             },
 
             // 数据
@@ -171,30 +188,38 @@ export default {
             ],
             //学校数据
             schools: [{
-                value: '选项1',
+                value: '北京大学',
                 label: '北京大学'
                 },
                 {
-                value: '选项2',
+                value: '清华大学',
                 label: '清华大学'
                 }, 
                 {
-                value: '选项3',
+                value: '人民大学',
                 label: '人民大学'
                 }, 
                 {
-                value: '选项4',
+                value: '北京理工',
                 label: '北京理工'
                 }, 
                 {
-                value: '选项5',
+                value: '中山大学',
                 label: '中山大学'
             }],
+            // 弹窗
+            dialogTableVisible:false,
+            gridData:[],
         }
     },
     computed:{
         price(){
             return this.form.num*this.form.price
+        }
+    },
+    watch:{
+        dialogTableVisible(newVal){
+            if(!newVal) this.gridData = []
         }
     },
     mounted(){
@@ -218,6 +243,11 @@ export default {
                     this.bookText = item.text
                 } 
             }
+        },
+        clickHandle(){
+            this.dialogTableVisible = true
+            this.form.finalPrice = this.form.num*this.form.price
+            this.gridData.push(this.form)
         }
     }
 }
@@ -243,5 +273,8 @@ export default {
     color: grey;
     font-size: 14px;
     margin: 20px 0;
+}
+.el-radio-button{
+    margin-right: 20px;;
 }
 </style>
